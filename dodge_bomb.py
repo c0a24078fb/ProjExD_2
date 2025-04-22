@@ -14,11 +14,16 @@ DELTA = {
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-def check_bound(rct):
+def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
+    """
+    引数：効果トンRectまたは爆弾Rect
+    戻り値：判定結果タプル（横、縦）
+    画面内ならTrue画面外ならFalseFalse
+    """
     yoko, tate = True, True
-    if 0 < rct.lrft < WIDTH:
+    if rct.left <0 or WIDTH < rct.right:
         yoko = False
-    if 0 < rct.top < HEIGHT:
+    if rct.top < 0 or HEIGHT < rct.bottom:
         tate = False
     return yoko, tate
 def main():
@@ -30,9 +35,9 @@ def main():
     kk_rct.center = 300, 200
     bb_img = pg.Surface((20, 20))
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
-    bb_rct = bb_img.get.rct()
+    bb_rct = bb_img.get_rect()
     bb_img.set_colorkey((0,0,0))
-    vx, xy = (+5,+5)
+    vx, vy = (+5,+5)
     bb_rct.centerx = random.randint(0,WIDTH)
     bb_rct.centery = random.randint(0,HEIGHT)
     clock = pg.time.Clock()
@@ -51,8 +56,15 @@ def main():
                 sum_mv[1] += mv[1]
         
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy)
+        yoko, tate = check_bound(bb_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
