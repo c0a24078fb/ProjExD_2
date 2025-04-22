@@ -26,8 +26,24 @@ def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:
         tate = False
     return yoko, tate
+def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
+    DELTA = pg.key.get_pressed()
+    if DELTA[pg.K_UP]:
+         sum_mv = pg.K_UP
+    elif DELTA[pg.K_DOWN]:
+         sum_mv = pg.K_UP
+    elif DELTA[pg.K_LEFT]:
+        sum_mv = pg.K_UP
+    elif DELTA[pg.K_RIGHT]:
+        sum_mv = pg.K_UP
+    else:
+        sum_mv = pg.K_UP
 
 def gameover(screen: pg.Surface) -> None:
+    """
+    引数：ゲームオーバー時に、半透明の黒い画面上に「Game Over」と表示し、泣いているこうかとん画像を貼り付ける関数
+
+    """
     cry_img = pg.image.load("fig/8.png") 
     font = pg.font.SysFont(None, 100)
     game_over_text = font.render("Game Over", True, (255,255,255))
@@ -50,7 +66,7 @@ def gameover(screen: pg.Surface) -> None:
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
-    bg_img = pg.image.load("fig/pg_bg.jpg")   
+    bg_img = pg.image.load("fig/pg_bg.jpg") 
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
@@ -76,7 +92,6 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
-        
         kk_rct.move_ip(sum_mv)
         if kk_rct.colliderect(bb_rct):
             gameover(screen)
@@ -86,6 +101,8 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
+        kk_img = get_kk_img((0, 0))
+        kk_img = get_kk_img(tuple(sum_mv))
         bb_rct.move_ip(vx,vy)
         yoko, tate = check_bound(bb_rct)
         if not yoko:
