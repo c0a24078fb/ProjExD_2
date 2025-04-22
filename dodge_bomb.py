@@ -66,10 +66,9 @@ def main():
     vx, vy = (+5,+5)
     bb_rct.centerx = random.randint(0,WIDTH)
     bb_rct.centery = random.randint(0,HEIGHT)
-    
     clock = pg.time.Clock()
-    
     tmr = 0
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
