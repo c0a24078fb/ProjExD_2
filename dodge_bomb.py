@@ -26,18 +26,7 @@ def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:
         tate = False
     return yoko, tate
-def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
-    DELTA = pg.key.get_pressed()
-    if DELTA[pg.K_UP]:
-         sum_mv = pg.K_UP
-    elif DELTA[pg.K_DOWN]:
-         sum_mv = pg.K_UP
-    elif DELTA[pg.K_LEFT]:
-        sum_mv = pg.K_UP
-    elif DELTA[pg.K_RIGHT]:
-        sum_mv = pg.K_UP
-    else:
-        sum_mv = pg.K_UP
+
 
 def gameover(screen: pg.Surface) -> None:
     """
@@ -101,8 +90,6 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        kk_img = get_kk_img((0, 0))
-        kk_img = get_kk_img(tuple(sum_mv))
         bb_rct.move_ip(vx,vy)
         yoko, tate = check_bound(bb_rct)
         if not yoko:
